@@ -10,6 +10,10 @@ export async function listTablesTool(db: D1Database): Promise<string> {
 }
 
 export async function getTableSchemaTool(db: D1Database, tableName: string): Promise<string> {
+  // Validate table name to prevent injection via bracket escape
+  if (/[;\]'"--]/.test(tableName)) {
+    return `Invalid table name: '${tableName}'. Table names must not contain special characters.`;
+  }
   const { results } = await db
     .prepare(`PRAGMA table_info([${tableName}])`)
     .all<{ name: string; type: string; notnull: number; dflt_value: string | null }>();
@@ -25,6 +29,9 @@ export async function queryTableTool(db: D1Database, sql: string): Promise<strin
   const trimmed = sql.trim().toUpperCase();
   if (!trimmed.startsWith("SELECT")) {
     throw new Error("Only SELECT queries are allowed.");
+  }
+  if (sql.includes(";")) {
+    throw new Error("Only single SELECT statements are allowed. Remove the semicolon.");
   }
   const { results } = await db.prepare(sql).all();
   if (!results.length) return "No results.";
