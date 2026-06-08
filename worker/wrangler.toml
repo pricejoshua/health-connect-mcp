@@ -1,0 +1,17 @@
+name = "health-connect-mcp"
+main = "src/index.ts"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "health-connect"
+database_id = "REPLACE_AFTER_CREATION"
+
+[vars]
+AGGREGATE = "true"
+
+[[rules]]
+type = "CompiledWasm"
+globs = ["**/*.wasm"]
+fallthrough = true
