@@ -506,18 +506,51 @@ function syncHealthConnect() {
    ============================================================ */
 
 function findExportBlob() {
-  // 1. Exact .db filename
+  var props = PropertiesService.getScriptProperties();
+  var folderId = props.getProperty('FOLDER_ID');
+
+  // If a specific folder ID is set, search only within that folder
+  if (folderId) {
+    try {
+      var folder = DriveApp.getFolderById(folderId);
+      Logger.log('Searching in folder: ' + folder.getName());
+
+      // Try .db file first
+      var iter = folder.getFilesByName('health_connect_export.db');
+      if (iter.hasNext()) return iter.next().getBlob();
+
+      // Try common zip names
+      var zipNames = ['health_connect_export.zip', 'health-connect-export.zip'];
+      for (var i = 0; i < zipNames.length; i++) {
+        iter = folder.getFilesByName(zipNames[i]);
+        if (iter.hasNext()) return extractDbFromZip(iter.next().getBlob());
+      }
+
+      // Search by partial name within the folder
+      iter = folder.searchFiles('title contains "health_connect"');
+      while (iter.hasNext()) {
+        var file = iter.next();
+        var name = file.getName();
+        if (name.slice(-3) === '.db') return file.getBlob();
+        if (name.slice(-4) === '.zip') return extractDbFromZip(file.getBlob());
+      }
+
+      Logger.log('File not found in specified folder — falling back to full Drive search');
+    } catch (e) {
+      Logger.log('WARNING: Could not open folder ' + folderId + ': ' + e + ' — falling back to full Drive search');
+    }
+  }
+
+  // Fall back to searching all of Drive
   var iter = DriveApp.getFilesByName('health_connect_export.db');
   if (iter.hasNext()) return iter.next().getBlob();
 
-  // 2. Common zip filenames
   var zipNames = ['health_connect_export.zip', 'health-connect-export.zip'];
   for (var i = 0; i < zipNames.length; i++) {
     iter = DriveApp.getFilesByName(zipNames[i]);
     if (iter.hasNext()) return extractDbFromZip(iter.next().getBlob());
   }
 
-  // 3. Search for any health_connect .db in Drive
   iter = DriveApp.searchFiles('title contains "health_connect" and title contains ".db"');
   if (iter.hasNext()) return iter.next().getBlob();
 
