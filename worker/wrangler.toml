@@ -6,12 +6,4 @@ compatibility_flags = ["nodejs_compat"]
 [[d1_databases]]
 binding = "DB"
 database_name = "health-connect"
-database_id = "REPLACE_AFTER_CREATION"
-
-[vars]
-AGGREGATE = "true"
-
-[[rules]]
-type = "CompiledWasm"
-globs = ["**/*.wasm"]
-fallthrough = true
+database_id = "03a049f9-3c55-48c3-8a53-7fc32baf4bcb"

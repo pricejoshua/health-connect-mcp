@@ -1,4 +1,5 @@
-import type { Column, Row } from "./sqlite";
+export type Column = { name: string; type: string };
+export type Row = Record<string, string | number | null>;
 
 const BATCH_SIZE = 100;
 

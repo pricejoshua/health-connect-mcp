@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { buildCreateTableSql, buildUpsertSql, ensureTable, upsertRows, writeSyncLog } from "../src/d1";
-import type { Column } from "../src/sqlite";
+import type { Column } from "../src/d1";
 
 describe("buildCreateTableSql", () => {
   it("generates CREATE TABLE IF NOT EXISTS with all columns", () => {

@@ -15,12 +15,8 @@
   "type": "commonjs",
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260608.1",
-    "@types/sql.js": "^1.4.11",
     "typescript": "^6.0.3",
     "vitest": "^4.1.8",
     "wrangler": "^4.98.0"
-  },
-  "dependencies": {
-    "sql.js": "^1.14.1"
   }
 }
