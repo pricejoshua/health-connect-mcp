@@ -1,1 +1,0 @@
-This folder contains the built output assets for the worker "health-connect-mcp" generated at 2026-06-08T20:49:24.686Z.
